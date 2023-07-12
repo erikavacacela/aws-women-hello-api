@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: java-build
-        path: ./build/libs/my-kiosk-api-*.jar
+        path: ./build/libs/aws-women-hello-api-*.jar
 
   build-push-image:
     name: Build and push docker image
