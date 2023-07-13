@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+env:
+  AWS_REGION: us-east-2
+  APPLICATION_NAME: ${{ github.repository }}
+
 jobs:
   build-app:
     name: Build java application
@@ -70,3 +74,41 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  deploy-app:
+    name: Deploy App
+    runs-on: ubuntu-latest
+    needs: build-push-image
+    env:
+      CLUSTER_NAME: EKS-aws-women
+      NAMESPACE: aws-women
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.EKS_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.EKS_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        id: install
+
+      - name: Configure Cluster Access
+        run: |
+          aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Setup namespace
+        shell: bash
+        run: kubectl config set-context --current --namespace=${{ env.NAMESPACE }}
+
+      - name: Helm lint
+        shell: bash
+        run: helm lint helm-chart
+
+      - name: Helm install
+        shell: bash
+        run: |
+          helm upgrade --install {{ env.APPLICATION_NAME }} helm-chart
