@@ -114,4 +114,4 @@ jobs:
       - name: Helm install
         shell: bash
         run: |
-          helm upgrade --install {{ env.APPLICATION_NAME }} helm-chart -f helm-chart/values.yaml
+          helm upgrade --install ${{ env.APPLICATION_NAME }} helm-chart -f helm-chart/values.yaml
