@@ -12,7 +12,6 @@ Example java api, build image and push to ECR, deploy on EKS
 ./gradlew clean build
 ```
 
-## Build image
 
 
 

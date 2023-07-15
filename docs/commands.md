@@ -18,7 +18,7 @@ sdk use java 11.0.19-tem
 ## Build image
 
 ```
-docker build -t aws-women-hello-api:latest .
+docker build -t manual-aws-women-hello-api:latest .
 
 docker images
 ```
@@ -34,7 +34,7 @@ docker images
 
 ```
 aws ecr create-repository \
-    --repository-name aws-women-hello-api:latest \
+    --repository-name manual-aws-women-hello-api:latest \
     --image-scanning-configuration scanOnPush=true \
     --region $AWS_REGION
 ```
@@ -44,23 +44,52 @@ aws ecr create-repository \
 4. Tag image
 
 ```
-docker tag aws-women-hello-api:latest 984724474376.dkr.ecr.us-east-2.amazonaws.com/aws-women-hello-api:1.0.0
+docker tag manual-aws-women-hello-api:latest 984724474376.dkr.ecr.us-east-2.amazonaws.com/manual-aws-women-hello-api:1.0.0
 
 source ./credentials.sh
 
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 984724474376.dkr.ecr.us-east-2.amazonaws.com
 
-docker push 984724474376.dkr.ecr.us-east-2.amazonaws.com/aws-women-hello-api:1.0.0
+docker push 984724474376.dkr.ecr.us-east-2.amazonaws.com/manual-aws-women-hello-api:1.0.0
 
-docker rmi 984724474376.dkr.ecr.us-east-2.amazonaws.com/aws-women-hello-api:1.0.0
+docker rmi 984724474376.dkr.ecr.us-east-2.amazonaws.com/manual-aws-women-hello-api:1.0.0
 
 ```
 
-5. Ahora a automatizar esto
+## Deploy service and deployment
+```
+kubectl get nodes
+
+kubectl create namespace aws-women
+
+kubectl get namespace
+
+kubectl config set-context --current --namespace=aws-women
+
+kubectl apply -f docs/deployment.yml
+
+kubectl get pods
+
+kubectl get service
+
+kubectl --namespace aws-women port-forward manual-aws-women-hello-api-5974fdd77f-sbsr7 8080:8080
 
 
+http://localhost:8080/api/actuator/health
 
-## Deploy app
+http://localhost:8080/api/v1/greet/Erika
+
+
+helm uninstall aws-women-hello-api
+
+kubectl get deployment
+
+kubectl get pods
+
+```
+
+
+## Deploy app manually using helm-chart
 
 ```
 kubectl get nodes
@@ -90,3 +119,7 @@ kubectl get deployment
 kubectl get pods
 
 ```
+
+
+5. Ahora a automatizar esto
+
