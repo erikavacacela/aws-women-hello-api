@@ -23,14 +23,14 @@ docker build -t aws-women-hello-api:latest .
 docker images
 ```
 
-# Upload a image to ECR
+## Upload a image to ECR
 
 1. Open the aws cli
 
 2. Create the repository
 
-CONSOLA
-CLI
+* CONSOLA
+* CLI
 
 ```
 aws ecr create-repository \
@@ -57,3 +57,36 @@ docker rmi 984724474376.dkr.ecr.us-east-2.amazonaws.com/aws-women-hello-api:1.0.
 ```
 
 5. Ahora a automatizar esto
+
+
+
+## Deploy app
+
+```
+kubectl get nodes
+
+kubectl create namespace aws-women
+
+kubectl get namespace
+
+kubectl config set-context --current --namespace=aws-women
+
+helm upgrade --install aws-women-hello-api helm-chart -f helm-chart/values.yaml
+
+kubectl get pods
+
+kubectl --namespace aws-women port-forward aws-women-hello-api-helm-chart-57c47cb4c7-gn4jd 8080:8080
+
+
+http://localhost:8080/api/actuator/health
+
+http://localhost:8080/api/v1/greet/Erika
+
+
+helm uninstall aws-women-hello-api
+
+kubectl get deployment
+
+kubectl get pods
+
+```
