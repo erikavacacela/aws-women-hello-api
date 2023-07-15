@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+credentials.sh
+helm-chart-deploy

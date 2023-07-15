@@ -1,7 +1,7 @@
 FROM openjdk:11-jre-slim-buster
 
 LABEL maintainer="Erika Vacacela"
-LABEL repo.url="https://github.com/erikavacacela/my-kiosk-api"
+LABEL repo.url="https://github.com/erikavacacela/aws-women-hello-api"
 
 RUN apt-get install tzdata
 
