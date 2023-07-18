@@ -18,7 +18,7 @@ sdk use java 11.0.19-tem
 ## Build image
 
 ```
-docker build -t manual-aws-women-hello-api:latest .
+docker build -t manual-aws-women-hello-api:1.0.0 .
 
 docker images
 ```
@@ -44,7 +44,7 @@ aws ecr create-repository \
 4. Tag image
 
 ```
-docker tag manual-aws-women-hello-api:latest 984724474376.dkr.ecr.us-east-2.amazonaws.com/manual-aws-women-hello-api:1.0.0
+docker tag manual-aws-women-hello-api:1.0.0 984724474376.dkr.ecr.us-east-2.amazonaws.com/manual-aws-women-hello-api:1.0.0
 
 source ./credentials.sh
 
@@ -66,11 +66,13 @@ kubectl get namespace
 
 kubectl config set-context --current --namespace=aws-women
 
-kubectl apply -f docs/deployment.yml
+kubectl apply -f deployment.yml
 
-kubectl get pods
+kubectl get deployment
 
 kubectl get service
+
+kubectl get pods
 
 kubectl --namespace aws-women port-forward manual-aws-women-hello-api-5974fdd77f-sbsr7 8080:8080
 

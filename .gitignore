@@ -38,3 +38,4 @@ out/
 
 credentials.sh
 helm-chart-deploy
+.DS_Store
